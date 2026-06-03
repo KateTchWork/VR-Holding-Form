@@ -235,7 +235,7 @@
 <script>
 (function () {
   // ===== CONFIG =====
-  var API_BASE = 'https://www.zohoapis.com/crm/v7/functions/vr_agent_lead_handler/actions/execute?auth_type=apikey&zapikey=1003.d7e876a8cbec8cb8bf4a65922db097f4.0ef185fa74190e70239bdf7e15d20797';
+  var API_BASE = 'https://vr-holding-proxy.kt-eea.workers.dev';
 
   // ===== DOM =====
   var form = document.getElementById('leadForm');
@@ -430,9 +430,9 @@
 
   // ===== API CALL =====
   function callAPI(args, onSuccess, onError) {
-    var url = API_BASE + '&arguments=' + encodeURIComponent(JSON.stringify(args));
+    var url = API_BASE + '?arguments=' + encodeURIComponent(JSON.stringify(args));
 
-    fetch(url, { method: 'POST' })
+    fetch(url)
       .then(function (res) { return res.json(); })
       .then(function (response) {
         var data;
