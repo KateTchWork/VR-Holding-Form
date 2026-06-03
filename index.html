@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VR Holding — Submit Lead</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .form-container {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+    }
+    .form-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+    }
+    .form-subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 32px;
+    }
+    .section-header {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a2e;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e0e0e0;
+      margin-bottom: 20px;
+      margin-top: 32px;
+    }
+    .section-header:first-of-type { margin-top: 0; }
+    .field-row { margin-bottom: 16px; }
+    .field-row-inline {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .field-row-inline .field-group { flex: 1; }
+    .field-group { position: relative; }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #444;
+      margin-bottom: 4px;
+    }
+    label .required { color: #e53935; }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    input:focus { border-color: #2563eb; }
+    input.is-error { border-color: #e53935; }
+    input.is-success { border-color: #2e7d32; }
+    .field-message {
+      font-size: 12px;
+      margin-top: 4px;
+      min-height: 16px;
+    }
+    .field-message.error { color: #e53935; }
+    .field-message.success { color: #2e7d32; }
+    .field-message.checking { color: #666; }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .checkbox-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    .checkbox-row label { margin-bottom: 0; cursor: pointer; }
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 24px;
+    }
+    .btn-submit:hover { background: #1d4ed8; }
+    .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; }
+    .result-box {
+      display: none;
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 24px;
+      font-size: 14px;
+    }
+    .result-box.show { display: block; }
+    .result-box.success {
+      background: #e8f5e9;
+      border: 1px solid #66bb6a;
+      color: #2e7d32;
+    }
+    .result-box.error {
+      background: #fce4ec;
+      border: 1px solid #ef5350;
+      color: #c62828;
+    }
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #ccc;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .saved-indicator {
+      font-size: 12px;
+      color: #2563eb;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .saved-indicator.show { display: block; }
+    @media (max-width: 500px) {
+      .form-container { padding: 24px 20px; }
+      .field-row-inline { flex-direction: column; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <h1 class="form-title">Submit a Lead</h1>
+  <p class="form-subtitle">Fill in the lead details and your broker information below.</p>
+
+  <form id="leadForm" novalidate>
+
+    <div class="section-header">Lead Information</div>
+
+    <div class="field-row-inline">
+      <div class="field-group">
+        <label for="first_name">First Name <span class="required">*</span></label>
+        <input type="text" id="first_name" name="first_name" required>
+      </div>
+      <div class="field-group">
+        <label for="last_name">Last Name <span class="required">*</span></label>
+        <input type="text" id="last_name" name="last_name" required>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <label for="phone1">Phone Number 1 <span class="required">*</span></label>
+      <input type="tel" id="phone1" name="phone1" placeholder="+995 XXX XXX XXX" required>
+      <div class="field-message" id="phone1Msg"></div>
+    </div>
+
+    <div class="field-row">
+      <label for="phone2">Phone Number 2</label>
+      <input type="tel" id="phone2" name="phone2" placeholder="+995 XXX XXX XXX">
+      <div class="field-message" id="phone2Msg"></div>
+    </div>
+
+    <div class="field-row">
+      <label for="lead_email">Email</label>
+      <input type="email" id="lead_email" name="email">
+    </div>
+
+    <div class="section-header">Your Broker Information</div>
+
+    <div class="saved-indicator" id="savedIndicator">Auto-filled from your previous submission</div>
+
+    <div class="field-row-inline">
+      <div class="field-group">
+        <label for="broker_first_name">First Name <span class="required">*</span></label>
+        <input type="text" id="broker_first_name" name="broker_first_name" required>
+      </div>
+      <div class="field-group">
+        <label for="broker_last_name">Last Name <span class="required">*</span></label>
+        <input type="text" id="broker_last_name" name="broker_last_name" required>
+      </div>
+    </div>
+
+    <div class="field-row-inline">
+      <div class="field-group">
+        <label for="broker_phone">Phone <span class="required">*</span></label>
+        <input type="tel" id="broker_phone" name="broker_phone" required>
+      </div>
+      <div class="field-group">
+        <label for="broker_email">Email <span class="required">*</span></label>
+        <input type="email" id="broker_email" name="broker_email" required>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <label for="agency_name">Agency Name</label>
+      <input type="text" id="agency_name" name="agency_name">
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="vat_payer" name="vat_payer">
+      <label for="vat_payer">VAT Payer</label>
+    </div>
+
+    <button type="submit" class="btn-submit" id="submitBtn">Submit Lead</button>
+  </form>
+
+  <div class="result-box" id="resultBox"></div>
+</div>
+
+<script>
+(function () {
+  // ===== CONFIG =====
+  var API_BASE = 'https://www.zohoapis.com/crm/v7/functions/vr_agent_lead_handler/actions/execute?auth_type=apikey&zapikey=1003.d7e876a8cbec8cb8bf4a65922db097f4.0ef185fa74190e70239bdf7e15d20797';
+
+  // ===== DOM =====
+  var form = document.getElementById('leadForm');
+  var submitBtn = document.getElementById('submitBtn');
+  var resultBox = document.getElementById('resultBox');
+  var savedIndicator = document.getElementById('savedIndicator');
+  var phone1Input = document.getElementById('phone1');
+  var phone2Input = document.getElementById('phone2');
+  var phone1Msg = document.getElementById('phone1Msg');
+  var phone2Msg = document.getElementById('phone2Msg');
+
+  var phone1Clear = false;
+  var phone2Clear = true;
+  var checkTimers = {};
+
+  // ===== RESTORE BROKER INFO FROM LOCALSTORAGE =====
+  var brokerFields = ['broker_first_name', 'broker_last_name', 'broker_phone', 'broker_email', 'agency_name', 'vat_payer'];
+  var hasSaved = false;
+
+  brokerFields.forEach(function (field) {
+    var saved = localStorage.getItem('vr_broker_' + field);
+    if (saved !== null && saved !== '') {
+      var el = document.getElementById(field);
+      if (el) {
+        if (el.type === 'checkbox') {
+          el.checked = saved === 'true';
+        } else {
+          el.value = saved;
+        }
+        hasSaved = true;
+      }
+    }
+  });
+  if (hasSaved) savedIndicator.classList.add('show');
+
+  // ===== CLEAN PHONE =====
+  function cleanPhone(val) {
+    var cleaned = val.replace(/[^\d+]/g, '');
+    if (cleaned.indexOf('+') > 0) {
+      cleaned = '+' + cleaned.replace(/\+/g, '');
+    }
+    return cleaned;
+  }
+
+  // ===== DEBOUNCED DUPLICATE CHECK =====
+  function checkPhone(input, msgEl, isPhone1) {
+    var key = isPhone1 ? 'p1' : 'p2';
+    clearTimeout(checkTimers[key]);
+
+    var val = cleanPhone(input.value);
+    if (!val || val.length < 6) {
+      msgEl.textContent = '';
+      msgEl.className = 'field-message';
+      input.classList.remove('is-error', 'is-success');
+      if (isPhone1) phone1Clear = false; else phone2Clear = true;
+      updateSubmitState();
+      return;
+    }
+
+    checkTimers[key] = setTimeout(function () {
+      msgEl.innerHTML = '<span class="spinner"></span> Checking...';
+      msgEl.className = 'field-message checking';
+      input.classList.remove('is-error', 'is-success');
+
+      var args = {
+        action: 'check_phone',
+        phone1: isPhone1 ? val : '',
+        phone2: isPhone1 ? '' : val,
+        first_name: '', last_name: '', email: '',
+        broker_first_name: '', broker_last_name: '',
+        broker_phone: '', broker_email: '',
+        agency_name: '', vat_payer: ''
+      };
+
+      callAPI(args, function (data) {
+        if (data.status === 'duplicate') {
+          msgEl.textContent = data.message;
+          msgEl.className = 'field-message error';
+          input.classList.add('is-error');
+          input.classList.remove('is-success');
+          if (isPhone1) phone1Clear = false; else phone2Clear = false;
+        } else {
+          msgEl.textContent = 'Available';
+          msgEl.className = 'field-message success';
+          input.classList.add('is-success');
+          input.classList.remove('is-error');
+          if (isPhone1) phone1Clear = true; else phone2Clear = true;
+        }
+        updateSubmitState();
+      }, function () {
+        msgEl.textContent = 'Could not verify — please try again';
+        msgEl.className = 'field-message error';
+        if (isPhone1) phone1Clear = false; else phone2Clear = false;
+        updateSubmitState();
+      });
+    }, 500);
+  }
+
+  phone1Input.addEventListener('blur', function () { checkPhone(phone1Input, phone1Msg, true); });
+  phone2Input.addEventListener('blur', function () {
+    if (phone2Input.value.trim()) checkPhone(phone2Input, phone2Msg, false);
+  });
+
+  // ===== SUBMIT STATE =====
+  function updateSubmitState() {
+    submitBtn.disabled = !phone1Clear || !phone2Clear;
+  }
+
+  // ===== FORM SUBMIT =====
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    resultBox.className = 'result-box';
+
+    var firstName = document.getElementById('first_name').value.trim();
+    var lastName = document.getElementById('last_name').value.trim();
+    var p1 = cleanPhone(phone1Input.value);
+    var p2 = cleanPhone(phone2Input.value);
+    var leadEmail = document.getElementById('lead_email').value.trim();
+    var bFirst = document.getElementById('broker_first_name').value.trim();
+    var bLast = document.getElementById('broker_last_name').value.trim();
+    var bPhone = cleanPhone(document.getElementById('broker_phone').value);
+    var bEmail = document.getElementById('broker_email').value.trim();
+    var agencyName = document.getElementById('agency_name').value.trim();
+    var vatPayer = document.getElementById('vat_payer').checked;
+
+    if (!firstName || !lastName) { showResult('error', 'Please fill in First Name and Last Name.'); return; }
+    if (!p1) { showResult('error', 'Phone Number 1 is required.'); return; }
+    if (!bFirst || !bLast || !bPhone || !bEmail) { showResult('error', 'Please fill in all required broker fields.'); return; }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
+    var args = {
+      action: 'submit_lead',
+      first_name: firstName,
+      last_name: lastName,
+      phone1: p1,
+      phone2: p2,
+      email: leadEmail,
+      broker_first_name: bFirst,
+      broker_last_name: bLast,
+      broker_phone: bPhone,
+      broker_email: bEmail,
+      agency_name: agencyName,
+      vat_payer: vatPayer ? 'true' : 'false'
+    };
+
+    callAPI(args, function (data) {
+      if (data.status === 'created') {
+        showResult('success', data.message);
+        saveBrokerInfo();
+        // Reset lead fields only
+        document.getElementById('first_name').value = '';
+        document.getElementById('last_name').value = '';
+        phone1Input.value = '';
+        phone2Input.value = '';
+        document.getElementById('lead_email').value = '';
+        phone1Msg.textContent = '';
+        phone2Msg.textContent = '';
+        phone1Input.className = '';
+        phone2Input.className = '';
+        phone1Clear = false;
+        phone2Clear = true;
+      } else {
+        showResult('error', data.message);
+      }
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Lead';
+    }, function () {
+      showResult('error', 'Something went wrong. Please try again.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Lead';
+    });
+  });
+
+  // ===== SAVE BROKER INFO =====
+  function saveBrokerInfo() {
+    brokerFields.forEach(function (field) {
+      var el = document.getElementById(field);
+      if (el) {
+        var val = el.type === 'checkbox' ? String(el.checked) : el.value;
+        localStorage.setItem('vr_broker_' + field, val);
+      }
+    });
+  }
+
+  // ===== SHOW RESULT =====
+  function showResult(type, message) {
+    resultBox.textContent = message;
+    resultBox.className = 'result-box show ' + type;
+  }
+
+  // ===== API CALL =====
+  function callAPI(args, onSuccess, onError) {
+    var url = API_BASE + '&arguments=' + encodeURIComponent(JSON.stringify(args));
+
+    fetch(url, { method: 'POST' })
+      .then(function (res) { return res.json(); })
+      .then(function (response) {
+        var data;
+        try {
+          if (response.details && response.details.output) {
+            data = JSON.parse(response.details.output);
+          } else {
+            data = response;
+          }
+        } catch (e) {
+          data = response;
+        }
+        onSuccess(data);
+      })
+      .catch(function (err) {
+        console.error('API Error:', err);
+        onError();
+      });
+  }
+
+})();
+</script>
+
+</body>
+</html>
