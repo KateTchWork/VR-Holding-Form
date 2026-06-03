@@ -74,6 +74,26 @@
     input:focus { border-color: #2563eb; }
     input.is-error { border-color: #e53935; }
     input.is-success { border-color: #2e7d32; }
+    .phone-group {
+      display: flex;
+      gap: 8px;
+    }
+    .phone-group .country-code {
+      width: 120px;
+      flex-shrink: 0;
+      padding: 10px 8px;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fff;
+      outline: none;
+      cursor: pointer;
+    }
+    .phone-group .country-code:focus { border-color: #2563eb; }
+    .phone-group input[type="tel"] {
+      flex: 1;
+      min-width: 0;
+    }
     .field-message {
       font-size: 12px;
       margin-top: 4px;
@@ -149,6 +169,7 @@
     @media (max-width: 500px) {
       .form-container { padding: 24px 20px; }
       .field-row-inline { flex-direction: column; gap: 16px; }
+      .phone-group .country-code { width: 100px; }
     }
   </style>
 </head>
@@ -175,13 +196,19 @@
 
     <div class="field-row">
       <label for="phone1">Phone Number 1 <span class="required">*</span></label>
-      <input type="tel" id="phone1" name="phone1" placeholder="+995 XXX XXX XXX" required>
+      <div class="phone-group">
+        <select class="country-code" id="phone1_code"></select>
+        <input type="tel" id="phone1" name="phone1" placeholder="5XX XXX XXX" required>
+      </div>
       <div class="field-message" id="phone1Msg"></div>
     </div>
 
     <div class="field-row">
       <label for="phone2">Phone Number 2</label>
-      <input type="tel" id="phone2" name="phone2" placeholder="+995 XXX XXX XXX">
+      <div class="phone-group">
+        <select class="country-code" id="phone2_code"></select>
+        <input type="tel" id="phone2" name="phone2" placeholder="5XX XXX XXX">
+      </div>
       <div class="field-message" id="phone2Msg"></div>
     </div>
 
@@ -205,15 +232,17 @@
       </div>
     </div>
 
-    <div class="field-row-inline">
-      <div class="field-group">
-        <label for="broker_phone">Phone <span class="required">*</span></label>
+    <div class="field-row">
+      <label for="broker_phone">Phone <span class="required">*</span></label>
+      <div class="phone-group">
+        <select class="country-code" id="broker_phone_code"></select>
         <input type="tel" id="broker_phone" name="broker_phone" required>
       </div>
-      <div class="field-group">
-        <label for="broker_email">Email <span class="required">*</span></label>
-        <input type="email" id="broker_email" name="broker_email" required>
-      </div>
+    </div>
+
+    <div class="field-row">
+      <label for="broker_email">Email <span class="required">*</span></label>
+      <input type="email" id="broker_email" name="broker_email" required>
     </div>
 
     <div class="field-row">
@@ -237,6 +266,109 @@
   // ===== CONFIG =====
   var API_BASE = 'https://vr-holding-proxy.kt-eea.workers.dev';
 
+  // ===== COUNTRY CODES =====
+  var countryCodes = [
+    { code: '995', label: '+995 GE' },
+    { code: '1', label: '+1 US/CA' },
+    { code: '44', label: '+44 UK' },
+    { code: '49', label: '+49 DE' },
+    { code: '33', label: '+33 FR' },
+    { code: '39', label: '+39 IT' },
+    { code: '34', label: '+34 ES' },
+    { code: '31', label: '+31 NL' },
+    { code: '32', label: '+32 BE' },
+    { code: '41', label: '+41 CH' },
+    { code: '43', label: '+43 AT' },
+    { code: '45', label: '+45 DK' },
+    { code: '46', label: '+46 SE' },
+    { code: '47', label: '+47 NO' },
+    { code: '48', label: '+48 PL' },
+    { code: '30', label: '+30 GR' },
+    { code: '36', label: '+36 HU' },
+    { code: '40', label: '+40 RO' },
+    { code: '351', label: '+351 PT' },
+    { code: '353', label: '+353 IE' },
+    { code: '354', label: '+354 IS' },
+    { code: '356', label: '+356 MT' },
+    { code: '357', label: '+357 CY' },
+    { code: '358', label: '+358 FI' },
+    { code: '359', label: '+359 BG' },
+    { code: '370', label: '+370 LT' },
+    { code: '371', label: '+371 LV' },
+    { code: '372', label: '+372 EE' },
+    { code: '373', label: '+373 MD' },
+    { code: '374', label: '+374 AM' },
+    { code: '375', label: '+375 BY' },
+    { code: '380', label: '+380 UA' },
+    { code: '381', label: '+381 RS' },
+    { code: '382', label: '+382 ME' },
+    { code: '383', label: '+383 XK' },
+    { code: '385', label: '+385 HR' },
+    { code: '386', label: '+386 SI' },
+    { code: '387', label: '+387 BA' },
+    { code: '389', label: '+389 MK' },
+    { code: '420', label: '+420 CZ' },
+    { code: '421', label: '+421 SK' },
+    { code: '7', label: '+7 RU/KZ' },
+    { code: '90', label: '+90 TR' },
+    { code: '91', label: '+91 IN' },
+    { code: '92', label: '+92 PK' },
+    { code: '93', label: '+93 AF' },
+    { code: '994', label: '+994 AZ' },
+    { code: '998', label: '+998 UZ' },
+    { code: '971', label: '+971 AE' },
+    { code: '972', label: '+972 IL' },
+    { code: '966', label: '+966 SA' },
+    { code: '974', label: '+974 QA' },
+    { code: '973', label: '+973 BH' },
+    { code: '968', label: '+968 OM' },
+    { code: '965', label: '+965 KW' },
+    { code: '962', label: '+962 JO' },
+    { code: '961', label: '+961 LB' },
+    { code: '964', label: '+964 IQ' },
+    { code: '98', label: '+98 IR' },
+    { code: '86', label: '+86 CN' },
+    { code: '81', label: '+81 JP' },
+    { code: '82', label: '+82 KR' },
+    { code: '66', label: '+66 TH' },
+    { code: '84', label: '+84 VN' },
+    { code: '60', label: '+60 MY' },
+    { code: '62', label: '+62 ID' },
+    { code: '63', label: '+63 PH' },
+    { code: '65', label: '+65 SG' },
+    { code: '61', label: '+61 AU' },
+    { code: '64', label: '+64 NZ' },
+    { code: '55', label: '+55 BR' },
+    { code: '52', label: '+52 MX' },
+    { code: '54', label: '+54 AR' },
+    { code: '57', label: '+57 CO' },
+    { code: '56', label: '+56 CL' },
+    { code: '51', label: '+51 PE' },
+    { code: '20', label: '+20 EG' },
+    { code: '27', label: '+27 ZA' },
+    { code: '234', label: '+234 NG' },
+    { code: '254', label: '+254 KE' },
+    { code: '212', label: '+212 MA' },
+    { code: '216', label: '+216 TN' },
+    { code: '213', label: '+213 DZ' }
+  ];
+
+  function populateCountryCode(selectId, defaultCode) {
+    var sel = document.getElementById(selectId);
+    countryCodes.forEach(function (c) {
+      var opt = document.createElement('option');
+      opt.value = c.code;
+      opt.textContent = c.label;
+      if (c.code === defaultCode) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  // Lead phones: default to +995, broker phone: default to +995
+  populateCountryCode('phone1_code', '995');
+  populateCountryCode('phone2_code', '995');
+  populateCountryCode('broker_phone_code', '995');
+
   // ===== DOM =====
   var form = document.getElementById('leadForm');
   var submitBtn = document.getElementById('submitBtn');
@@ -252,7 +384,7 @@
   var checkTimers = {};
 
   // ===== RESTORE BROKER INFO FROM LOCALSTORAGE =====
-  var brokerFields = ['broker_first_name', 'broker_last_name', 'broker_phone', 'broker_email', 'agency_name', 'vat_payer'];
+  var brokerFields = ['broker_first_name', 'broker_last_name', 'broker_phone', 'broker_phone_code', 'broker_email', 'agency_name', 'vat_payer'];
   var hasSaved = false;
 
   brokerFields.forEach(function (field) {
@@ -271,22 +403,26 @@
   });
   if (hasSaved) savedIndicator.classList.add('show');
 
-  // ===== CLEAN PHONE =====
+  // ===== CLEAN PHONE — digits only =====
   function cleanPhone(val) {
-    var cleaned = val.replace(/[^\d+]/g, '');
-    if (cleaned.indexOf('+') > 0) {
-      cleaned = '+' + cleaned.replace(/\+/g, '');
-    }
-    return cleaned;
+    return val.replace(/\D/g, '');
+  }
+
+  // ===== BUILD FULL NUMBER: countryCode + localDigits =====
+  function buildFullPhone(codeSelectId, inputEl) {
+    var code = document.getElementById(codeSelectId).value;
+    var local = cleanPhone(inputEl.value);
+    if (!local) return '';
+    return code + local;
   }
 
   // ===== DEBOUNCED DUPLICATE CHECK =====
-  function checkPhone(input, msgEl, isPhone1) {
+  function checkPhone(input, codeSelectId, msgEl, isPhone1) {
     var key = isPhone1 ? 'p1' : 'p2';
     clearTimeout(checkTimers[key]);
 
-    var val = cleanPhone(input.value);
-    if (!val || val.length < 6) {
+    var local = cleanPhone(input.value);
+    if (!local || local.length < 5) {
       msgEl.textContent = '';
       msgEl.className = 'field-message';
       input.classList.remove('is-error', 'is-success');
@@ -300,10 +436,15 @@
       msgEl.className = 'field-message checking';
       input.classList.remove('is-error', 'is-success');
 
+      var fullPhone = buildFullPhone(codeSelectId, input);
+
+      // Send full number (code+local) with pipe separator so function knows the local part
+      var phoneVal = document.getElementById(codeSelectId).value + '|' + local;
+
       var args = {
         action: 'check_phone',
-        phone1: isPhone1 ? val : '',
-        phone2: isPhone1 ? '' : val,
+        phone1: isPhone1 ? phoneVal : '',
+        phone2: isPhone1 ? '' : phoneVal,
         first_name: '', last_name: '', email: '',
         broker_first_name: '', broker_last_name: '',
         broker_phone: '', broker_email: '',
@@ -334,9 +475,16 @@
     }, 500);
   }
 
-  phone1Input.addEventListener('blur', function () { checkPhone(phone1Input, phone1Msg, true); });
+  phone1Input.addEventListener('blur', function () { checkPhone(phone1Input, 'phone1_code', phone1Msg, true); });
   phone2Input.addEventListener('blur', function () {
-    if (phone2Input.value.trim()) checkPhone(phone2Input, phone2Msg, false);
+    if (phone2Input.value.trim()) checkPhone(phone2Input, 'phone2_code', phone2Msg, false);
+  });
+  // Re-check when country code changes
+  document.getElementById('phone1_code').addEventListener('change', function () {
+    if (phone1Input.value.trim()) checkPhone(phone1Input, 'phone1_code', phone1Msg, true);
+  });
+  document.getElementById('phone2_code').addEventListener('change', function () {
+    if (phone2Input.value.trim()) checkPhone(phone2Input, 'phone2_code', phone2Msg, false);
   });
 
   // ===== SUBMIT STATE =====
@@ -351,19 +499,22 @@
 
     var firstName = document.getElementById('first_name').value.trim();
     var lastName = document.getElementById('last_name').value.trim();
-    var p1 = cleanPhone(phone1Input.value);
-    var p2 = cleanPhone(phone2Input.value);
+    var p1Local = cleanPhone(phone1Input.value);
+    var p2Local = cleanPhone(phone2Input.value);
+    var p1Code = document.getElementById('phone1_code').value;
+    var p2Code = document.getElementById('phone2_code').value;
     var leadEmail = document.getElementById('lead_email').value.trim();
     var bFirst = document.getElementById('broker_first_name').value.trim();
     var bLast = document.getElementById('broker_last_name').value.trim();
-    var bPhone = cleanPhone(document.getElementById('broker_phone').value);
+    var bPhoneLocal = cleanPhone(document.getElementById('broker_phone').value);
+    var bPhoneCode = document.getElementById('broker_phone_code').value;
     var bEmail = document.getElementById('broker_email').value.trim();
     var agencyName = document.getElementById('agency_name').value.trim();
     var vatPayer = document.getElementById('vat_payer').checked;
 
     if (!firstName || !lastName) { showResult('error', 'Please fill in First Name and Last Name.'); return; }
-    if (!p1) { showResult('error', 'Phone Number 1 is required.'); return; }
-    if (!bFirst || !bLast || !bPhone || !bEmail) { showResult('error', 'Please fill in all required broker fields.'); return; }
+    if (!p1Local) { showResult('error', 'Phone Number 1 is required.'); return; }
+    if (!bFirst || !bLast || !bPhoneLocal || !bEmail) { showResult('error', 'Please fill in all required broker fields.'); return; }
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting...';
@@ -372,12 +523,12 @@
       action: 'submit_lead',
       first_name: firstName,
       last_name: lastName,
-      phone1: p1,
-      phone2: p2,
+      phone1: p1Code + '|' + p1Local,
+      phone2: p2Local ? (p2Code + '|' + p2Local) : '',
       email: leadEmail,
       broker_first_name: bFirst,
       broker_last_name: bLast,
-      broker_phone: bPhone,
+      broker_phone: bPhoneCode + '|' + bPhoneLocal,
       broker_email: bEmail,
       agency_name: agencyName,
       vat_payer: vatPayer ? 'true' : 'false'
