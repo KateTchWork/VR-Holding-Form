@@ -247,6 +247,7 @@
     <div class="field-row">
       <label for="lead_email"><span data-i18n="lbl_email">Email</span></label>
       <input type="email" id="lead_email" name="email">
+      <div class="field-message" id="leadEmailMsg"></div>
     </div>
 
     <div class="section-header" data-i18n="section_broker">Your Broker Information</div>
@@ -275,6 +276,7 @@
     <div class="field-row">
       <label for="broker_email"><span data-i18n="lbl_broker_email">Email</span></label>
       <input type="email" id="broker_email" name="broker_email">
+      <div class="field-message" id="brokerEmailMsg"></div>
     </div>
 
     <div class="field-row">
@@ -630,6 +632,29 @@
     return val.replace(/\D/g, '');
   }
 
+  // ===== EMAIL VALIDATION ON BLUR =====
+  var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function validateEmailOnBlur(inputId, msgId, translationKey) {
+    var input = document.getElementById(inputId);
+    var msgEl = document.getElementById(msgId);
+    input.addEventListener('blur', function () {
+      var val = input.value.trim();
+      if (val && !emailRegex.test(val)) {
+        msgEl.textContent = t(translationKey);
+        msgEl.className = 'field-message error';
+        input.classList.add('is-error');
+      } else {
+        msgEl.textContent = '';
+        msgEl.className = 'field-message';
+        input.classList.remove('is-error');
+      }
+    });
+  }
+
+  validateEmailOnBlur('lead_email', 'leadEmailMsg', 'val_email_invalid');
+  validateEmailOnBlur('broker_email', 'brokerEmailMsg', 'val_broker_email_invalid');
+
   // ===== LIVE VALIDATION — update button as user types =====
   ['first_name', 'phone1', 'phone2', 'lead_email', 'broker_first_name', 'broker_last_name', 'broker_phone'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateSubmitState);
@@ -864,9 +889,14 @@
   }
 
   // ===== SHOW RESULT =====
+  var resultTimer = null;
   function showResult(type, message) {
+    clearTimeout(resultTimer);
     resultBox.textContent = message;
     resultBox.className = 'result-box show ' + type;
+    resultTimer = setTimeout(function () {
+      resultBox.className = 'result-box';
+    }, 30000);
   }
 
   // ===== API CALL =====
