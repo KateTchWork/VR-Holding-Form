@@ -628,6 +628,7 @@
   ['first_name', 'phone1', 'phone2', 'lead_email', 'broker_first_name', 'broker_last_name', 'broker_phone'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateSubmitState);
   });
+  updateSubmitState();
 
   // ===== DEBOUNCED DUPLICATE CHECK =====
   function checkPhone(input, codeSelectId, msgEl, isPhone1) {
