@@ -100,6 +100,7 @@
       min-height: 16px;
     }
     .field-message.error { color: #e53935; }
+    .field-message.warning { color: #e67e22; }
     .field-message.success { color: #2e7d32; }
     .field-message.checking { color: #666; }
     .checkbox-row {
@@ -189,8 +190,8 @@
         <input type="text" id="first_name" name="first_name" required>
       </div>
       <div class="field-group">
-        <label for="last_name">Last Name <span class="required">*</span></label>
-        <input type="text" id="last_name" name="last_name" required>
+        <label for="last_name">Last Name</label>
+        <input type="text" id="last_name" name="last_name">
       </div>
     </div>
 
@@ -458,6 +459,12 @@
           input.classList.add('is-error');
           input.classList.remove('is-success');
           if (isPhone1) phone1Clear = false; else phone2Clear = false;
+        } else if (data.status === 'warning') {
+          msgEl.textContent = data.message;
+          msgEl.className = 'field-message warning';
+          input.classList.remove('is-error', 'is-success');
+          // Warning allows submission
+          if (isPhone1) phone1Clear = true; else phone2Clear = true;
         } else {
           msgEl.textContent = 'Available';
           msgEl.className = 'field-message success';
@@ -512,7 +519,8 @@
     var agencyName = document.getElementById('agency_name').value.trim();
     var vatPayer = document.getElementById('vat_payer').checked;
 
-    if (!firstName || !lastName) { showResult('error', 'Please fill in First Name and Last Name.'); return; }
+    if (!firstName) { showResult('error', 'Please fill in First Name.'); return; }
+    if (!lastName) lastName = '-';
     if (!p1Local) { showResult('error', 'Phone Number 1 is required.'); return; }
     if (!bFirst || !bLast || !bPhoneLocal || !bEmail) { showResult('error', 'Please fill in all required broker fields.'); return; }
 
