@@ -23,12 +23,29 @@
       width: 100%;
       padding: 40px;
     }
+    .form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
     .form-title {
       font-size: 24px;
       font-weight: 700;
       color: #1a1a2e;
-      margin-bottom: 8px;
     }
+    .lang-select {
+      padding: 6px 10px;
+      border: 1px solid #d0d5dd;
+      border-radius: 6px;
+      font-size: 13px;
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+      color: #444;
+      flex-shrink: 0;
+    }
+    .lang-select:focus { border-color: #2563eb; }
     .form-subtitle {
       font-size: 14px;
       color: #666;
@@ -44,6 +61,12 @@
       margin-top: 32px;
     }
     .section-header:first-of-type { margin-top: 0; }
+    .contact-note {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 16px;
+      margin-top: -12px;
+    }
     .field-row { margin-bottom: 16px; }
     .field-row-inline {
       display: flex;
@@ -177,64 +200,72 @@
 <body>
 
 <div class="form-container">
-  <h1 class="form-title">Submit a Lead</h1>
-  <p class="form-subtitle">Fill in the lead details and your broker information below.</p>
+  <div class="form-header">
+    <h1 class="form-title" data-i18n="form_title">Submit a Lead</h1>
+    <select class="lang-select" id="langSelect">
+      <option value="en">English</option>
+      <option value="ka">Georgian</option>
+      <option value="ru">Russian</option>
+    </select>
+  </div>
+  <p class="form-subtitle" data-i18n="form_subtitle">Fill in the lead details and your broker information below.</p>
 
   <form id="leadForm" novalidate>
 
-    <div class="section-header">Lead Information</div>
+    <div class="section-header" data-i18n="section_lead">Lead Information</div>
+    <div class="contact-note" data-i18n="contact_note">* At least one contact method required (phone number or email)</div>
 
     <div class="field-row-inline">
       <div class="field-group">
-        <label for="first_name">First Name <span class="required">*</span></label>
+        <label for="first_name"><span data-i18n="lbl_first_name">First Name</span> <span class="required">*</span></label>
         <input type="text" id="first_name" name="first_name" required>
       </div>
       <div class="field-group">
-        <label for="last_name">Last Name</label>
+        <label for="last_name"><span data-i18n="lbl_last_name">Last Name</span></label>
         <input type="text" id="last_name" name="last_name">
       </div>
     </div>
 
     <div class="field-row">
-      <label for="phone1">Phone Number 1 <span class="required">*</span></label>
+      <label for="phone1"><span data-i18n="lbl_phone1">Phone Number 1</span></label>
       <div class="phone-group">
         <select class="country-code" id="phone1_code"></select>
-        <input type="tel" id="phone1" name="phone1" placeholder="5XX XXX XXX" required>
+        <input type="tel" id="phone1" name="phone1" data-i18n-placeholder="phone_placeholder" placeholder="5XX XXX XXX">
       </div>
       <div class="field-message" id="phone1Msg"></div>
     </div>
 
     <div class="field-row">
-      <label for="phone2">Phone Number 2</label>
+      <label for="phone2"><span data-i18n="lbl_phone2">Phone Number 2</span></label>
       <div class="phone-group">
         <select class="country-code" id="phone2_code"></select>
-        <input type="tel" id="phone2" name="phone2" placeholder="5XX XXX XXX">
+        <input type="tel" id="phone2" name="phone2" data-i18n-placeholder="phone_placeholder" placeholder="5XX XXX XXX">
       </div>
       <div class="field-message" id="phone2Msg"></div>
     </div>
 
     <div class="field-row">
-      <label for="lead_email">Email</label>
+      <label for="lead_email"><span data-i18n="lbl_email">Email</span></label>
       <input type="email" id="lead_email" name="email">
     </div>
 
-    <div class="section-header">Your Broker Information</div>
+    <div class="section-header" data-i18n="section_broker">Your Broker Information</div>
 
-    <div class="saved-indicator" id="savedIndicator">Auto-filled from your previous submission</div>
+    <div class="saved-indicator" id="savedIndicator" data-i18n="auto_filled">Auto-filled from your previous submission</div>
 
     <div class="field-row-inline">
       <div class="field-group">
-        <label for="broker_first_name">First Name <span class="required">*</span></label>
+        <label for="broker_first_name"><span data-i18n="lbl_broker_fn">First Name</span> <span class="required">*</span></label>
         <input type="text" id="broker_first_name" name="broker_first_name" required>
       </div>
       <div class="field-group">
-        <label for="broker_last_name">Last Name <span class="required">*</span></label>
+        <label for="broker_last_name"><span data-i18n="lbl_broker_ln">Last Name</span> <span class="required">*</span></label>
         <input type="text" id="broker_last_name" name="broker_last_name" required>
       </div>
     </div>
 
     <div class="field-row">
-      <label for="broker_phone">Phone <span class="required">*</span></label>
+      <label for="broker_phone"><span data-i18n="lbl_broker_phone">Phone</span> <span class="required">*</span></label>
       <div class="phone-group">
         <select class="country-code" id="broker_phone_code"></select>
         <input type="tel" id="broker_phone" name="broker_phone" required>
@@ -242,21 +273,21 @@
     </div>
 
     <div class="field-row">
-      <label for="broker_email">Email <span class="required">*</span></label>
-      <input type="email" id="broker_email" name="broker_email" required>
+      <label for="broker_email"><span data-i18n="lbl_broker_email">Email</span></label>
+      <input type="email" id="broker_email" name="broker_email">
     </div>
 
     <div class="field-row">
-      <label for="agency_name">Agency Name</label>
+      <label for="agency_name"><span data-i18n="lbl_agency">Agency Name</span></label>
       <input type="text" id="agency_name" name="agency_name">
     </div>
 
     <div class="checkbox-row">
       <input type="checkbox" id="vat_payer" name="vat_payer">
-      <label for="vat_payer">VAT Payer</label>
+      <label for="vat_payer" data-i18n="lbl_vat">VAT Payer</label>
     </div>
 
-    <button type="submit" class="btn-submit" id="submitBtn">Submit Lead</button>
+    <button type="submit" class="btn-submit" id="submitBtn" data-i18n="btn_submit">Submit Lead</button>
   </form>
 
   <div class="result-box" id="resultBox"></div>
@@ -266,6 +297,182 @@
 (function () {
   // ===== CONFIG =====
   var API_BASE = 'https://vr-holding-proxy.kt-eea.workers.dev';
+
+  // ===== TRANSLATIONS =====
+  var T = {
+    en: {
+      page_title: 'VR Holding — Submit Lead',
+      form_title: 'Submit a Lead',
+      form_subtitle: 'Fill in the lead details and your broker information below.',
+      section_lead: 'Lead Information',
+      section_broker: 'Your Broker Information',
+      contact_note: '* At least one contact method required (phone number or email)',
+      lbl_first_name: 'First Name',
+      lbl_last_name: 'Last Name',
+      lbl_phone1: 'Phone Number 1',
+      lbl_phone2: 'Phone Number 2',
+      lbl_email: 'Email',
+      lbl_broker_fn: 'First Name',
+      lbl_broker_ln: 'Last Name',
+      lbl_broker_phone: 'Phone',
+      lbl_broker_email: 'Email',
+      lbl_agency: 'Agency Name',
+      lbl_vat: 'VAT Payer',
+      btn_submit: 'Submit Lead',
+      btn_submitting: 'Submitting...',
+      auto_filled: 'Auto-filled from your previous submission',
+      phone_placeholder: '5XX XXX XXX',
+      checking: 'Checking...',
+      available: 'Available',
+      check_failed: 'Could not verify — please try again',
+      reason_other_broker: 'This number is registered by another broker. However, if the deal closes, the company will pay the commission.',
+      reason_vr_lead: 'This number is already registered in the database.',
+      reason_active_client: 'This number is registered as an active client.',
+      result_lead_created: 'Lead submitted successfully!',
+      result_note_created: 'Request received. The number is registered by another broker — if the deal closes, the company will pay the commission.',
+      result_duplicate: 'This number is already in the database. Lead was not created.',
+      result_error: 'Something went wrong. Please try again.',
+      val_first_name: 'Please fill in First Name.',
+      val_contact: 'Please provide at least a phone number or email.',
+      val_broker: 'Please fill in all required broker fields.'
+    },
+    ka: {
+      page_title: 'VR Holding — ლიდის გაგზავნა',
+      form_title: 'ლიდის გაგზავნა',
+      form_subtitle: 'შეავსეთ კლიენტის მონაცემები და თქვენი საბროკერო ინფორმაცია.',
+      section_lead: 'კლიენტის ინფორმაცია',
+      section_broker: 'ბროკერის ინფორმაცია',
+      contact_note: '* საჭიროა მინიმუმ ერთი საკონტაქტო საშუალება (ტელეფონი ან ელ. ფოსტა)',
+      lbl_first_name: 'სახელი',
+      lbl_last_name: 'გვარი',
+      lbl_phone1: 'ტელეფონი 1',
+      lbl_phone2: 'ტელეფონი 2',
+      lbl_email: 'ელ. ფოსტა',
+      lbl_broker_fn: 'სახელი',
+      lbl_broker_ln: 'გვარი',
+      lbl_broker_phone: 'ტელეფონი',
+      lbl_broker_email: 'ელ. ფოსტა',
+      lbl_agency: 'სააგენტოს სახელი',
+      lbl_vat: 'დღგ-ს გადამხდელი',
+      btn_submit: 'ლიდის გაგზავნა',
+      btn_submitting: 'იგზავნება...',
+      auto_filled: 'ავტომატურად შევსებული წინა გაგზავნიდან',
+      phone_placeholder: '5XX XXX XXX',
+      checking: 'მოწმდება...',
+      available: 'ნომერი თავისუფალია',
+      check_failed: 'ვერ მოწმდა — სცადეთ თავიდან',
+      reason_other_broker: 'ნომერი ფიქსირდება ბაზაში სხვა ბროკერის მიერ, თუმცა დილის დახურვის შემთხვევაში კომპანია გადაიხდის საკომისიოს',
+      reason_vr_lead: 'ნომერი უკვე ფიქსირდება ბაზაში',
+      reason_active_client: 'აღნიშნული ნომერი ფიქსირდება ბაზაში, როგორც აქტიური კლიენტი',
+      result_lead_created: 'ლიდი წარმატებით გაიგზავნა!',
+      result_note_created: 'მოთხოვნა მიღებულია. ნომერი ფიქსირდება სხვა ბროკერის მიერ — დილის დახურვის შემთხვევაში კომპანია გადაიხდის საკომისიოს',
+      result_duplicate: 'ნომერი უკვე ფიქსირდება ბაზაში. ლიდი არ შეიქმნა.',
+      result_error: 'დაფიქსირდა შეცდომა. გთხოვთ სცადოთ თავიდან.',
+      val_first_name: 'გთხოვთ შეავსოთ სახელი.',
+      val_contact: 'გთხოვთ მიუთითოთ ტელეფონის ნომერი ან ელ. ფოსტა.',
+      val_broker: 'გთხოვთ შეავსოთ ბროკერის ყველა სავალდებულო ველი.'
+    },
+    ru: {
+      page_title: 'VR Holding — Отправить лид',
+      form_title: 'Отправить лид',
+      form_subtitle: 'Заполните данные клиента и вашу брокерскую информацию.',
+      section_lead: 'Информация о клиенте',
+      section_broker: 'Информация о брокере',
+      contact_note: '* Необходим хотя бы один способ связи (телефон или эл. почта)',
+      lbl_first_name: 'Имя',
+      lbl_last_name: 'Фамилия',
+      lbl_phone1: 'Телефон 1',
+      lbl_phone2: 'Телефон 2',
+      lbl_email: 'Эл. почта',
+      lbl_broker_fn: 'Имя',
+      lbl_broker_ln: 'Фамилия',
+      lbl_broker_phone: 'Телефон',
+      lbl_broker_email: 'Эл. почта',
+      lbl_agency: 'Название агентства',
+      lbl_vat: 'Плательщик НДС',
+      btn_submit: 'Отправить лид',
+      btn_submitting: 'Отправка...',
+      auto_filled: 'Автозаполнено из предыдущей отправки',
+      phone_placeholder: '5XX XXX XXX',
+      checking: 'Проверка...',
+      available: 'Номер свободен',
+      check_failed: 'Не удалось проверить — попробуйте снова',
+      reason_other_broker: 'Номер зарегистрирован другим брокером, однако при закрытии сделки компания выплатит комиссию.',
+      reason_vr_lead: 'Этот номер уже зарегистрирован в базе данных.',
+      reason_active_client: 'Этот номер зарегистрирован как активный клиент.',
+      result_lead_created: 'Лид успешно отправлен!',
+      result_note_created: 'Запрос принят. Номер зарегистрирован другим брокером — при закрытии сделки компания выплатит комиссию.',
+      result_duplicate: 'Номер уже в базе данных. Лид не создан.',
+      result_error: 'Произошла ошибка. Попробуйте снова.',
+      val_first_name: 'Заполните имя клиента.',
+      val_contact: 'Укажите номер телефона или электронную почту.',
+      val_broker: 'Заполните все обязательные поля брокера.'
+    }
+  };
+
+  var currentLang = 'en';
+
+  function t(key) {
+    return T[currentLang][key] || T['en'][key] || key;
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang === 'ka' ? 'ka' : lang === 'ru' ? 'ru' : 'en';
+    document.title = t('page_title');
+
+    // Update all data-i18n elements
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      var key = el.getAttribute('data-i18n');
+      if (T[lang][key]) el.textContent = T[lang][key];
+    });
+
+    // Update placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function (el) {
+      var key = el.getAttribute('data-i18n-placeholder');
+      if (T[lang][key]) el.placeholder = T[lang][key];
+    });
+
+    // Update language selector
+    document.getElementById('langSelect').value = lang;
+
+    // Save preference
+    localStorage.setItem('vr_language', lang);
+
+    // Re-apply any active phone messages with new language
+    updatePhoneMessages();
+  }
+
+  // Track phone check state
+  var phoneState = {
+    p1: { status: null, reason: null },
+    p2: { status: null, reason: null }
+  };
+
+  function updatePhoneMessages() {
+    updateOnePhoneMsg('p1', phone1Input, phone1Msg);
+    updateOnePhoneMsg('p2', phone2Input, phone2Msg);
+  }
+
+  function updateOnePhoneMsg(key, input, msgEl) {
+    var state = phoneState[key];
+    if (!state.status) return;
+
+    if (state.status === 'duplicate' || state.status === 'warning') {
+      var reason = state.reason || 'vr_lead';
+      msgEl.textContent = t('reason_' + reason);
+      msgEl.className = 'field-message ' + (state.status === 'warning' ? 'warning' : 'error');
+    } else if (state.status === 'clear') {
+      msgEl.textContent = t('available');
+      msgEl.className = 'field-message success';
+    } else if (state.status === 'checking') {
+      msgEl.innerHTML = '<span class="spinner"></span> ' + t('checking');
+      msgEl.className = 'field-message checking';
+    } else if (state.status === 'check_failed') {
+      msgEl.textContent = t('check_failed');
+      msgEl.className = 'field-message error';
+    }
+  }
 
   // ===== COUNTRY CODES =====
   var countryCodes = [
@@ -365,7 +572,6 @@
     });
   }
 
-  // Lead phones: default to +995, broker phone: default to +995
   populateCountryCode('phone1_code', '995');
   populateCountryCode('phone2_code', '995');
   populateCountryCode('broker_phone_code', '995');
@@ -380,7 +586,8 @@
   var phone1Msg = document.getElementById('phone1Msg');
   var phone2Msg = document.getElementById('phone2Msg');
 
-  var phone1Clear = false;
+  // Phone clear state: true = OK to submit (either empty or check passed)
+  var phone1Clear = true;
   var phone2Clear = true;
   var checkTimers = {};
 
@@ -404,17 +611,17 @@
   });
   if (hasSaved) savedIndicator.classList.add('show');
 
+  // ===== LANGUAGE INIT =====
+  var savedLang = localStorage.getItem('vr_language') || 'en';
+  setLanguage(savedLang);
+
+  document.getElementById('langSelect').addEventListener('change', function () {
+    setLanguage(this.value);
+  });
+
   // ===== CLEAN PHONE — digits only =====
   function cleanPhone(val) {
     return val.replace(/\D/g, '');
-  }
-
-  // ===== BUILD FULL NUMBER: countryCode + localDigits =====
-  function buildFullPhone(codeSelectId, inputEl) {
-    var code = document.getElementById(codeSelectId).value;
-    var local = cleanPhone(inputEl.value);
-    if (!local) return '';
-    return code + local;
   }
 
   // ===== DEBOUNCED DUPLICATE CHECK =====
@@ -427,19 +634,17 @@
       msgEl.textContent = '';
       msgEl.className = 'field-message';
       input.classList.remove('is-error', 'is-success');
-      if (isPhone1) phone1Clear = false; else phone2Clear = true;
+      phoneState[key] = { status: null, reason: null };
+      if (isPhone1) phone1Clear = true; else phone2Clear = true;
       updateSubmitState();
       return;
     }
 
     checkTimers[key] = setTimeout(function () {
-      msgEl.innerHTML = '<span class="spinner"></span> Checking...';
-      msgEl.className = 'field-message checking';
+      phoneState[key] = { status: 'checking', reason: null };
+      updateOnePhoneMsg(key, input, msgEl);
       input.classList.remove('is-error', 'is-success');
 
-      var fullPhone = buildFullPhone(codeSelectId, input);
-
-      // Send full number (code+local) with pipe separator so function knows the local part
       var phoneVal = document.getElementById(codeSelectId).value + '|' + local;
 
       var args = {
@@ -449,52 +654,64 @@
         first_name: '', last_name: '', email: '',
         broker_first_name: '', broker_last_name: '',
         broker_phone: '', broker_email: '',
-        agency_name: '', vat_payer: ''
+        agency_name: '', vat_payer: '',
+        lang: currentLang
       };
 
       callAPI(args, function (data) {
         if (data.status === 'duplicate') {
-          msgEl.textContent = data.message;
-          msgEl.className = 'field-message error';
+          phoneState[key] = { status: 'duplicate', reason: data.reason || 'vr_lead' };
+          updateOnePhoneMsg(key, input, msgEl);
           input.classList.add('is-error');
           input.classList.remove('is-success');
           if (isPhone1) phone1Clear = false; else phone2Clear = false;
         } else if (data.status === 'warning') {
-          msgEl.textContent = data.message;
-          msgEl.className = 'field-message warning';
+          phoneState[key] = { status: 'warning', reason: data.reason || 'other_broker' };
+          updateOnePhoneMsg(key, input, msgEl);
           input.classList.remove('is-error', 'is-success');
-          // Warning allows submission
           if (isPhone1) phone1Clear = true; else phone2Clear = true;
         } else {
-          msgEl.textContent = 'Available';
-          msgEl.className = 'field-message success';
+          phoneState[key] = { status: 'clear', reason: 'available' };
+          updateOnePhoneMsg(key, input, msgEl);
           input.classList.add('is-success');
           input.classList.remove('is-error');
           if (isPhone1) phone1Clear = true; else phone2Clear = true;
         }
         updateSubmitState();
       }, function () {
-        msgEl.textContent = 'Could not verify — please try again';
-        msgEl.className = 'field-message error';
+        phoneState[key] = { status: 'check_failed', reason: null };
+        updateOnePhoneMsg(key, input, msgEl);
         if (isPhone1) phone1Clear = false; else phone2Clear = false;
         updateSubmitState();
       });
     }, 500);
   }
 
-  phone1Input.addEventListener('blur', function () { checkPhone(phone1Input, 'phone1_code', phone1Msg, true); });
+  phone1Input.addEventListener('blur', function () {
+    if (phone1Input.value.trim()) {
+      checkPhone(phone1Input, 'phone1_code', phone1Msg, true);
+    } else {
+      phone1Msg.textContent = '';
+      phone1Msg.className = 'field-message';
+      phone1Input.classList.remove('is-error', 'is-success');
+      phoneState.p1 = { status: null, reason: null };
+      phone1Clear = true;
+      updateSubmitState();
+    }
+  });
   phone2Input.addEventListener('blur', function () {
     if (phone2Input.value.trim()) {
       checkPhone(phone2Input, 'phone2_code', phone2Msg, false);
     } else {
-      // Clear error state when Phone 2 is emptied
       phone2Msg.textContent = '';
       phone2Msg.className = 'field-message';
       phone2Input.classList.remove('is-error', 'is-success');
+      phoneState.p2 = { status: null, reason: null };
       phone2Clear = true;
       updateSubmitState();
     }
   });
+
   // Re-check when country code changes
   document.getElementById('phone1_code').addEventListener('change', function () {
     if (phone1Input.value.trim()) checkPhone(phone1Input, 'phone1_code', phone1Msg, true);
@@ -528,19 +745,30 @@
     var agencyName = document.getElementById('agency_name').value.trim();
     var vatPayer = document.getElementById('vat_payer').checked;
 
-    if (!firstName) { showResult('error', 'Please fill in First Name.'); return; }
+    // First name required
+    if (!firstName) {
+      showResult('error', t('val_first_name'));
+      return;
+    }
+    // Conditional: at least phone or email required
+    if (!p1Local && !p2Local && !leadEmail) {
+      showResult('error', t('val_contact'));
+      return;
+    }
     if (!lastName) lastName = '-';
-    if (!p1Local) { showResult('error', 'Phone Number 1 is required.'); return; }
-    if (!bFirst || !bLast || !bPhoneLocal || !bEmail) { showResult('error', 'Please fill in all required broker fields.'); return; }
+    if (!bFirst || !bLast || !bPhoneLocal) {
+      showResult('error', t('val_broker'));
+      return;
+    }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting...';
+    submitBtn.textContent = t('btn_submitting');
 
     var args = {
       action: 'submit_lead',
       first_name: firstName,
       last_name: lastName,
-      phone1: p1Code + '|' + p1Local,
+      phone1: p1Local ? (p1Code + '|' + p1Local) : '',
       phone2: p2Local ? (p2Code + '|' + p2Local) : '',
       email: leadEmail,
       broker_first_name: bFirst,
@@ -548,12 +776,18 @@
       broker_phone: bPhoneCode + '|' + bPhoneLocal,
       broker_email: bEmail,
       agency_name: agencyName,
-      vat_payer: vatPayer ? 'true' : 'false'
+      vat_payer: vatPayer ? 'true' : 'false',
+      lang: currentLang
     };
 
     callAPI(args, function (data) {
       if (data.status === 'created') {
-        showResult('success', data.message);
+        var reason = data.reason || (data.lead_id ? 'lead_created' : 'note_created');
+        if (reason === 'note_created') {
+          showResult('success', t('result_note_created'));
+        } else {
+          showResult('success', t('result_lead_created'));
+        }
         saveBrokerInfo();
         // Reset lead fields only
         document.getElementById('first_name').value = '';
@@ -565,17 +799,26 @@
         phone2Msg.textContent = '';
         phone1Input.className = '';
         phone2Input.className = '';
-        phone1Clear = false;
+        phoneState.p1 = { status: null, reason: null };
+        phoneState.p2 = { status: null, reason: null };
+        phone1Clear = true;
         phone2Clear = true;
+      } else if (data.status === 'duplicate') {
+        var reason = data.reason || 'vr_lead';
+        if (reason === 'active_client') {
+          showResult('error', t('reason_active_client'));
+        } else {
+          showResult('error', t('result_duplicate'));
+        }
       } else {
-        showResult('error', data.message);
+        showResult('error', t('result_error'));
       }
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit Lead';
+      submitBtn.textContent = t('btn_submit');
     }, function () {
-      showResult('error', 'Something went wrong. Please try again.');
+      showResult('error', t('result_error'));
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit Lead';
+      submitBtn.textContent = t('btn_submit');
     });
   });
 
