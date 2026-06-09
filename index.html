@@ -624,6 +624,11 @@
     return val.replace(/\D/g, '');
   }
 
+  // ===== LIVE VALIDATION — update button as user types =====
+  ['first_name', 'phone1', 'phone2', 'lead_email', 'broker_first_name', 'broker_last_name', 'broker_phone'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', updateSubmitState);
+  });
+
   // ===== DEBOUNCED DUPLICATE CHECK =====
   function checkPhone(input, codeSelectId, msgEl, isPhone1) {
     var key = isPhone1 ? 'p1' : 'p2';
@@ -722,7 +727,15 @@
 
   // ===== SUBMIT STATE =====
   function updateSubmitState() {
-    submitBtn.disabled = !phone1Clear || !phone2Clear;
+    var hasContact = cleanPhone(phone1Input.value).length >= 5
+      || cleanPhone(phone2Input.value).length >= 5
+      || document.getElementById('lead_email').value.trim() !== '';
+    var hasFirstName = document.getElementById('first_name').value.trim() !== '';
+    var hasBrokerRequired = document.getElementById('broker_first_name').value.trim() !== ''
+      && document.getElementById('broker_last_name').value.trim() !== ''
+      && cleanPhone(document.getElementById('broker_phone').value).length > 0;
+
+    submitBtn.disabled = !phone1Clear || !phone2Clear || !hasContact || !hasFirstName || !hasBrokerRequired;
   }
 
   // ===== FORM SUBMIT =====
