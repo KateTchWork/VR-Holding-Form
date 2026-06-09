@@ -334,7 +334,9 @@
       result_error: 'Something went wrong. Please try again.',
       val_first_name: 'Please fill in First Name.',
       val_contact: 'Please provide at least a phone number or email.',
-      val_broker: 'Please fill in all required broker fields.'
+      val_broker: 'Please fill in all required broker fields.',
+      val_email_invalid: 'Please enter a valid email address.',
+      val_broker_email_invalid: 'Please enter a valid broker email address.'
     },
     ka: {
       page_title: 'VR Holding — ლიდის გაგზავნა',
@@ -370,7 +372,9 @@
       result_error: 'დაფიქსირდა შეცდომა. გთხოვთ სცადოთ თავიდან.',
       val_first_name: 'გთხოვთ შეავსოთ სახელი.',
       val_contact: 'გთხოვთ მიუთითოთ ტელეფონის ნომერი ან ელ. ფოსტა.',
-      val_broker: 'გთხოვთ შეავსოთ ბროკერის ყველა სავალდებულო ველი.'
+      val_broker: 'გთხოვთ შეავსოთ ბროკერის ყველა სავალდებულო ველი.',
+      val_email_invalid: 'გთხოვთ შეიყვანოთ სწორი ელ. ფოსტის მისამართი.',
+      val_broker_email_invalid: 'გთხოვთ შეიყვანოთ ბროკერის სწორი ელ. ფოსტის მისამართი.'
     },
     ru: {
       page_title: 'VR Holding — Отправить лид',
@@ -406,7 +410,9 @@
       result_error: 'Произошла ошибка. Попробуйте снова.',
       val_first_name: 'Заполните имя клиента.',
       val_contact: 'Укажите номер телефона или электронную почту.',
-      val_broker: 'Заполните все обязательные поля брокера.'
+      val_broker: 'Заполните все обязательные поля брокера.',
+      val_email_invalid: 'Введите корректный адрес электронной почты.',
+      val_broker_email_invalid: 'Введите корректный адрес электронной почты брокера.'
     }
   };
 
@@ -767,6 +773,16 @@
     // Conditional: at least phone or email required
     if (!p1Local && !p2Local && !leadEmail) {
       showResult('error', t('val_contact'));
+      return;
+    }
+    // Email format validation (if filled)
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (leadEmail && !emailRegex.test(leadEmail)) {
+      showResult('error', t('val_email_invalid'));
+      return;
+    }
+    if (bEmail && !emailRegex.test(bEmail)) {
+      showResult('error', t('val_broker_email_invalid'));
       return;
     }
     if (!lastName) lastName = '-';
