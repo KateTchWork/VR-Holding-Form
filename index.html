@@ -484,7 +484,16 @@
 
   phone1Input.addEventListener('blur', function () { checkPhone(phone1Input, 'phone1_code', phone1Msg, true); });
   phone2Input.addEventListener('blur', function () {
-    if (phone2Input.value.trim()) checkPhone(phone2Input, 'phone2_code', phone2Msg, false);
+    if (phone2Input.value.trim()) {
+      checkPhone(phone2Input, 'phone2_code', phone2Msg, false);
+    } else {
+      // Clear error state when Phone 2 is emptied
+      phone2Msg.textContent = '';
+      phone2Msg.className = 'field-message';
+      phone2Input.classList.remove('is-error', 'is-success');
+      phone2Clear = true;
+      updateSubmitState();
+    }
   });
   // Re-check when country code changes
   document.getElementById('phone1_code').addEventListener('change', function () {
